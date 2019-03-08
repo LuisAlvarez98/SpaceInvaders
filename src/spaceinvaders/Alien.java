@@ -8,7 +8,7 @@ import java.awt.Rectangle;
  *
  * @author Luis Felipe Alvarez Sanchez A01194173 4 Feb 2019
  */
-public class Bar extends Item {
+public class Alien extends Item {
 
     private int width;
     private int height;
@@ -25,7 +25,7 @@ public class Bar extends Item {
      * @param height
      * @param game
      */
-    public Bar(int x, int y, int width, int height, Game game) {
+    public Alien(int x, int y, int width, int height, Game game) {
         super(x, y);
         this.width = width;
         this.height = height;
@@ -133,6 +133,5 @@ public class Bar extends Item {
     @Override
     public void render(Graphics g) {
         g.drawImage(Assets.alien,getX(), getY(), getWidth(), getHeight(), null);
-
     }
 }

@@ -28,7 +28,7 @@ public class Game implements Runnable {
     private boolean running; //boolean saying if it is running
     private boolean paused; // paused boolean
 
-    private ArrayList<Bar> bars; //blocks array list
+    private ArrayList<Alien> bars; //blocks array list
     private Player player; //player instance
     private KeyManager keyManager; //key manager
 
@@ -39,8 +39,9 @@ public class Game implements Runnable {
     private boolean won; // did you win?
     private int enemies; // number of enemies
 
-    private ArrayList<PowerUp> powerups;
-
+    private final int ALIEN_INIT_X = 165;
+    private final int ALIEN_INIT_Y = 15;
+       private ArrayList<Alien> aliens;
     /**
      * Game Constructor
      *
@@ -55,8 +56,7 @@ public class Game implements Runnable {
         running = false;
         paused = false;
         keyManager = new KeyManager();
-        bars = new ArrayList<Bar>();
-        powerups = new ArrayList<PowerUp>();
+        aliens = new ArrayList<>();
         this.score = 0;
         this.gameStart = false;
         this.won = false;
@@ -183,6 +183,13 @@ public class Game implements Runnable {
     public void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
+        
+
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                 aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, 25,25,this));
+            }
+        }
         player = new Player(getWidth()/2 - 35,getHeight()-50, 50, 50,this,3);
         display.getJframe().addKeyListener(keyManager);
     }
@@ -241,6 +248,9 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
+            for(int i = 0; i < aliens.size(); i++){
+                  aliens.get(i).render(g);
+            }
             g.setColor(Color.WHITE);
             g.drawString("Score: " + getScore(), 10, getHeight() - 485);
             g.setColor(Color.WHITE);
