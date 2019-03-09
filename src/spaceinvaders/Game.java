@@ -285,6 +285,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                     = new ImageIcon(Assets.explosion);
                             bullet.die();
                             aliens.remove(i);
+                            score += 5;
                         }
                     }
                 }
