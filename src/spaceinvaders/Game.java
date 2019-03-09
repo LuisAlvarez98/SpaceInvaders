@@ -195,12 +195,7 @@ public class Game extends JPanel implements Runnable, Commons {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
 
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, ALIEN_HEIGHT, ALIEN_WIDTH, this));
-            }
-        }
-
+        initAliens();
         player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
         bullet = new Bullet();
         display.getJframe().addKeyListener(keyManager);
@@ -262,8 +257,8 @@ public class Game extends JPanel implements Runnable, Commons {
      * tick method
      */
     private void tick() {
+        keyManager.tick();
         if (!isGameOver()) {
-            keyManager.tick();
             player.tick();
             //Gamestart
             if (getKeyManager().space) {
@@ -276,19 +271,20 @@ public class Game extends JPanel implements Runnable, Commons {
                 int bulletX = bullet.getX();
                 int bulletY = bullet.getY();
 
-                for (Alien alien : aliens) {
+                for (int i = 0; i < aliens.size(); i++) {
 
-                    int alienX = alien.getX();
-                    int alienY = alien.getY();
+                    int alienX = aliens.get(i).getX();
+                    int alienY = aliens.get(i).getY();
 
                     if (bullet.isVisible()) {
                         if (bulletX >= (alienX)
-                                && bulletX <= (alienX + alien.getWidth())
+                                && bulletX <= (alienX + aliens.get(i).getWidth())
                                 && bulletY >= (alienY)
-                                && bulletY <= (alienY + alien.getHeight())) {
+                                && bulletY <= (alienY + aliens.get(i).getHeight())) {
                             ImageIcon ii
                                     = new ImageIcon(Assets.explosion);
                             bullet.die();
+                            aliens.remove(i);
                         }
                     }
                 }
@@ -328,6 +324,7 @@ public class Game extends JPanel implements Runnable, Commons {
                     if (y > GROUND - ALIEN_HEIGHT - 45) {
                         System.out.println("end");
                         setGameOver(true);
+
                     }
                 }
             }
@@ -373,6 +370,18 @@ public class Game extends JPanel implements Runnable, Commons {
                     }
                 }
             }
+        } else if (getKeyManager().enter) {
+            //init everything
+            setGameOver(false);
+            
+            //Resets lives and score
+            player.setLives(3);
+            setScore(0);
+            //RESETS PLAYER, BULLET AND ALIENS
+        
+            initAliens();
+            player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
+            bullet = new Bullet();
         }
     }
 
@@ -392,7 +401,11 @@ public class Game extends JPanel implements Runnable, Commons {
             for (int i = 0; i < aliens.size(); i++) {
                 aliens.get(i).render(g);
             }
-            
+
+            if (isGameOver()) {
+                g.drawImage(Assets.gameover, 125, getHeight() / 2 - 150, 250, 250, null);
+                aliens.remove(g);
+            }
             g.setColor(Color.WHITE);
             g.drawString("Score: " + getScore(), 10, getHeight() - 485);
             g.setColor(Color.WHITE);
@@ -422,6 +435,14 @@ public class Game extends JPanel implements Runnable, Commons {
                 thread.join();
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
+            }
+        }
+    }
+
+    private void initAliens() {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, ALIEN_HEIGHT, ALIEN_WIDTH, this));
             }
         }
     }
