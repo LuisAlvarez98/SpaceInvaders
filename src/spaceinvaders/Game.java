@@ -63,6 +63,8 @@ public class Game extends JPanel implements Runnable, Commons {
 
     private int direction = -1;
 
+    private int alienSize;
+
     /**
      * Game Constructor
      *
@@ -82,6 +84,7 @@ public class Game extends JPanel implements Runnable, Commons {
         this.gameStart = false;
         this.won = false;
         this.hearts = new LinkedList<Heart>();
+        this.alienSize = 36;
     }
 
     /**
@@ -100,6 +103,14 @@ public class Game extends JPanel implements Runnable, Commons {
      */
     public boolean isPaused() {
         return paused;
+    }
+
+    public void setAlienSize(int alienSize) {
+        this.alienSize = alienSize;
+    }
+
+    public int getAlienSize() {
+        return alienSize;
     }
 
     /**
@@ -400,7 +411,9 @@ public class Game extends JPanel implements Runnable, Commons {
                                         = new ImageIcon(Assets.explosion);
                                 increaseScore();
                                 bullet.die();
-                                aliens.get(i).setDead(true);
+                                aliens.remove(i);
+                                setAlienSize(aliens.size());
+                                System.out.println(getAlienSize());
 
                             }
                         }
@@ -452,7 +465,6 @@ public class Game extends JPanel implements Runnable, Commons {
 
                     int shot = generator.nextInt(15);
                     Alien.Bomb b = alien.getbomb();
-                    System.out.println(shot);
                     if (shot == 5 && alien.isVisible() && b.isDestroyed()) {
                         b.setDestroyed(false);
                         b.setX(alien.getX());
@@ -465,16 +477,20 @@ public class Game extends JPanel implements Runnable, Commons {
                     int playerX = player.getX();
                     int playerY = player.getY();
 
-                    if (b.intersects(player)) {
-                        System.out.println("acabron");
-                        player.setLives(player.getLives() - 1);
-                        b.setDestroyed(true);
+                    if (player.intersects(b)) {
+                        int counter = 0;
+                        if (counter == 0) {
+                            player.setLives(player.getLives() - 1);
+                            b.setDestroyed(true);
+                            counter++;
+                        }
+
                     }
                     if (!b.isDestroyed()) {
 
                         b.setY(b.getY() + 1);
 
-                        if (b.getY() >= getHeight() - 60) {
+                        if (b.getY() >= getHeight() - 30) {
                             b.setDestroyed(true);
                         }
                     }
