@@ -43,11 +43,12 @@ public class Game extends JPanel implements Runnable, Commons {
 
     private boolean won; // did you win?
     private int enemies; // number of enemies
-    
-    private int direction = -1;
+
     private final int ALIEN_INIT_X = 165;
     private final int ALIEN_INIT_Y = 15;
     private ArrayList<Alien> aliens;
+
+    private int direction = -1;
 
     /**
      * Game Constructor
@@ -194,7 +195,7 @@ public class Game extends JPanel implements Runnable, Commons {
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
-                aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, 25, 25, this));
+                aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, ALIEN_HEIGHT, ALIEN_WIDTH, this));
             }
         }
 
@@ -259,55 +260,73 @@ public class Game extends JPanel implements Runnable, Commons {
      * tick method
      */
     private void tick() {
-        keyManager.tick();
-        player.tick();
-        //Gamestart
-        if (getKeyManager().space) {
-            if (!bullet.isVisible()) {
-                bullet = new Bullet(player.getX(), player.getY());
+        if (!isGameOver()) {
+            keyManager.tick();
+            player.tick();
+            //Gamestart
+            if (getKeyManager().space) {
+                if (!bullet.isVisible()) {
+                    bullet = new Bullet(player.getX(), player.getY());
+                }
             }
-        }
-        if (bullet.isVisible()) {
+            if (bullet.isVisible()) {
 
-            int bulletX = bullet.getX();
-            int bulletY = bullet.getY();
+                int bulletX = bullet.getX();
+                int bulletY = bullet.getY();
 
-            for (Alien alien : aliens) {
+                for (Alien alien : aliens) {
 
-                int alienX = alien.getX();
-                int alienY = alien.getY();
+                    int alienX = alien.getX();
+                    int alienY = alien.getY();
 
-                if (bullet.isVisible()) {
-                    if (bulletX >= (alienX)
-                            && bulletX <= (alienX + alien.getWidth())
-                            && bulletY >= (alienY)
-                            && bulletY <= (alienY + alien.getHeight())) {
-                        ImageIcon ii
-                                = new ImageIcon(Assets.explosion);
-                        bullet.die();
+                    if (bullet.isVisible()) {
+                        if (bulletX >= (alienX)
+                                && bulletX <= (alienX + alien.getWidth())
+                                && bulletY >= (alienY)
+                                && bulletY <= (alienY + alien.getHeight())) {
+                            ImageIcon ii
+                                    = new ImageIcon(Assets.explosion);
+                            bullet.die();
+                        }
                     }
+                }
+
+                int y = bullet.getY();
+                y -= 4;
+
+                if (y < 0) {
+                    bullet.die();
+                } else {
+                    bullet.setY(y);
                 }
             }
 
-            int y = bullet.getY();
-            y -= 4;
+            for (int i = 0; i < aliens.size(); i++) {
 
-            if (y < 0) {
-                bullet.die();
-            } else {
-                bullet.setY(y);
-            }
-        }
-        
-        for(Alien alien : aliens) {
-            int x = alien.getX();
-            
-            if(x >= BOARD_WIDTH - BORDER_RIGHT && direction != -1) {
-                direction = 1;
-                Iterator i_2 = aliens.iterator();
-                while(i_2.hasNext()) {
-                    Alien al = (Alien) i_2.next();
-                    al.setY(al.getY() + GO_DOWN);
+                int x = aliens.get(i).getX();
+                aliens.get(i).tick();
+                if (x >= BOARD_WIDTH - BORDER_RIGHT) {
+                    for (int j = 0; j < aliens.size(); j++) {
+                        aliens.get(j).setY(aliens.get(j).getY() + 3);
+                        aliens.get(j).setDirection(-1);
+                    }
+
+                }
+
+                if (x <= BORDER_LEFT) {
+                    for (int j = 0; j < aliens.size(); j++) {
+                        aliens.get(j).setY(aliens.get(j).getY() + 3);
+                        aliens.get(j).setDirection(1);
+                    }
+                }
+                if (aliens.get(i).isVisible()) {
+
+                    int y = aliens.get(i).getY();
+                    System.out.println(y);
+                    if (y > GROUND - ALIEN_HEIGHT - 45 ) {
+                        System.out.println("end");
+                        setGameOver(true);
+                    }
                 }
             }
         }

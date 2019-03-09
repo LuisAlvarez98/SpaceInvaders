@@ -17,6 +17,8 @@ public class Alien extends Item {
     private Game game;
     private Bomb bomb;
     private boolean dead;
+    private int direction;
+    private boolean visible;
 
     /**
      * Player constructor
@@ -34,8 +36,26 @@ public class Alien extends Item {
         health = 3;
         this.game = game;
         this.dead = false;
+        this.direction = 1;
+        this.visible = true;
     }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
     
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
 
     /**
      * getHeight method
@@ -114,7 +134,11 @@ public class Alien extends Item {
      */
     @Override
     public void tick() {
-
+        if(getDirection() >= 1){
+              this.x += +1;
+        }else{
+            this.x += -1;
+        }
     }
     //Collisions
 
