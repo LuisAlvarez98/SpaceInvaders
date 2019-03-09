@@ -195,8 +195,11 @@ public class Game extends JPanel implements Runnable, Commons {
      * inits the game with the display and player
      */
     public void init() {
+
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
+        Assets.main.play();
+        Assets.main.setLooping(true);
 
         initAliens();
         hearts.add(new Heart(0, 20, 25, 25));
@@ -265,6 +268,7 @@ public class Game extends JPanel implements Runnable, Commons {
      */
     private void tick() {
         keyManager.tick();
+        
         if (getKeyManager().enter) {
             setGameStart(true);
         }
@@ -551,9 +555,11 @@ public class Game extends JPanel implements Runnable, Commons {
                     aliens.get(i).render(g);
                 }
             }
-
+            if(!isGameStart()){
+                 g.drawImage(Assets.start, 0, 0, width, height, null);
+            }
             if (isGameOver()) {
-                g.drawImage(Assets.gameover, 125, getHeight() / 2 - 150, 250, 250, null);
+                g.drawImage(Assets.gameover, 0, 0, width, height, null);
                 aliens.remove(g);
             }
             g.setColor(Color.WHITE);
