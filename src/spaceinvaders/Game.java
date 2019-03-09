@@ -500,7 +500,7 @@ public class Game extends JPanel implements Runnable, Commons {
             player.setLives(3);
             setScore(0);
             //RESETS PLAYER, BULLET AND ALIENS
-
+            aliens = new ArrayList<Alien>();
             initAliens();
             player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
             bullet = new Bullet();
