@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
  * 4 Feb 2019
  */
 public class Assets {
-    public static BufferedImage player,alien, background;
+    public static BufferedImage player,alien, background, bullet, explosion;
     /**
      * loads the assets
      */
@@ -16,7 +16,8 @@ public class Assets {
         background = ImageLoader.loadImage("/images/bg.png");
         player = ImageLoader.loadImage("/images/player.png");
         alien = ImageLoader.loadImage("/images/alien.png");
-        
+        bullet = ImageLoader.loadImage("/images/bullet.png");
+        explosion = ImageLoader.loadImage("/images/explosion.png");
     }
     
 }

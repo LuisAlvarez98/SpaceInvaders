@@ -16,6 +16,7 @@ public class Player extends Item {
     private int width;
     private int height;
     private Game game;
+    private Bullet bullet;
     private int lives;
 
     /**
@@ -133,6 +134,7 @@ public class Player extends Item {
         } else if (getX() <= -10) {
             setX(-10);
         }
+        
     }
     /**
      * Creates rectangle for the player

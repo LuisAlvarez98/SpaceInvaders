@@ -3,6 +3,7 @@ package spaceinvaders;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -10,13 +11,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 /**
  * Game Class Crystal Braker Game
  *
  * @author Luis Felipe Alvarez Sanchez and Genaro
  */
-public class Game implements Runnable {
+public class Game extends JPanel implements Runnable, Commons {
 
     private BufferStrategy bs; // BufferStrategy var
     private Graphics g; // for the graphics
@@ -30,6 +33,7 @@ public class Game implements Runnable {
 
     private ArrayList<Alien> bars; //blocks array list
     private Player player; //player instance
+    private Bullet bullet;
     private KeyManager keyManager; //key manager
 
     private boolean gameOver; //gameover boolean
@@ -190,10 +194,18 @@ public class Game implements Runnable {
                  aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, 25,25,this));
             }
         }
+        
         player = new Player(getWidth()/2 - 35,getHeight()-50, 50, 50,this,3);
+        bullet = new Bullet();
         display.getJframe().addKeyListener(keyManager);
     }
+        public void drawShot(Graphics g) {
 
+        if (bullet.isVisible()) {
+            
+            g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
+        }
+    }
     /**
      * run method
      */
@@ -235,7 +247,62 @@ public class Game implements Runnable {
         keyManager.tick();
         player.tick();
         //Gamestart
+        if(getKeyManager().space) {
+            if (!bullet.isVisible()) {
+                        bullet = new Bullet(player.getX(), player.getY());
+                    }
+        }
+        if (bullet.isVisible()) {
+
+            int shotX = bullet.getX();
+            int shotY = bullet.getY();
+
+            for (Alien alien: aliens) {
+
+                int alienX = alien.getX();
+                int alienY = alien.getY();
+
+                if (bullet.isVisible()) {
+                    if (shotX >= (alienX)
+                            && shotX <= (alienX + alien.getWidth())
+                            && shotY >= (alienY)
+                            && shotY <= (alienY + alien.getHeight())) {
+                        ImageIcon ii
+                                = new ImageIcon(Assets.explosion);
+                        bullet.die();
+                    }
+                }
+            }
+
+            int y = bullet.getY();
+            y -= 4;
+
+            if (y < 0) {
+                bullet.die();
+            } else {
+                bullet.setY(y);
+            }
+        }
+        /*@Override
+        public void keyPressed(KeyEvent e) {
+
+            player.keyPressed(e);
+
+            int x = player.getX();
+            int y = player.getY();
+
+            int key = e.getKeyCode();
+
+            if (key == KeyEvent.VK_SPACE) {
+                
+                if (ingame) {
+                    if (!shot.isVisible()) {
+                        shot = new Shot(x, y);
+                    }
+                }*/
+        
     }
+    
 
     /**
      * render method where all the magic happens
@@ -248,6 +315,7 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
+            drawShot(g);
             for(int i = 0; i < aliens.size(); i++){
                   aliens.get(i).render(g);
             }
