@@ -458,10 +458,12 @@ public class Game extends JPanel implements Runnable, Commons {
                         }
                     }
                 }
+
                 // bombs
                 Random generator = new Random();
 
                 for (Alien alien : aliens) {
+
 
                     int shot = generator.nextInt(15);
                     Alien.Bomb b = alien.getbomb();
