@@ -43,16 +43,20 @@ public class KeyManager implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
     }
+
     /**
      * getPause method
-     * @return pause 
+     *
+     * @return pause
      */
     public boolean getPause() {
         return pause;
     }
+
     /**
      * setPause method
-     * @param pause 
+     *
+     * @param pause
      */
     public void setPause(boolean pause) {
         this.pause = pause;
@@ -67,15 +71,25 @@ public class KeyManager implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // set true to every key pressed
         keys[e.getKeyCode()] = true;
-    
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            keys[e.getKeyCode()] = true;
+        }
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         // set false to every key released
         keys[e.getKeyCode()] = false;
+
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            keys[e.getKeyCode()] = true;
+        }
     }
 
+     public void keyCheck(int key, boolean checker){
+        keys[key] = checker;
+    }
     /**
      * to enable or disable moves on every tick
      */

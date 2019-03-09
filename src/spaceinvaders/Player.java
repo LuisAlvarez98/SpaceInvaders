@@ -143,7 +143,7 @@ public class Player extends Item {
      * @return 
      */
    public Rectangle getPerimetro() {
-        return new Rectangle(getX(), getY(), 40, 40);
+        return new Rectangle(getX(), getY(), 20, 20);
     }
     /**
      * render method
