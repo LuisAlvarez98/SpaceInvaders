@@ -12,10 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-<<<<<<< HEAD
 import java.util.LinkedList;
-=======
->>>>>>> 78e0209e182d4f213dd96e0f5799036c0c1e00d4
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -381,47 +378,7 @@ public class Game extends JPanel implements Runnable, Commons {
             if (player.getLives() <= 0) {
                 setGameOver(true);
             }
-            Random generator = new Random();
-            for (Alien alien : aliens) {
-
-                int shot = generator.nextInt(15);
-                Alien.Bomb b = alien.getBomb();
-
-                if (shot == CHANCE && alien.isVisible() && b.isDestroyed()) {
-
-                    b.setDestroyed(false);
-                    b.setX(alien.getX());
-                    b.setY(alien.getY());
-                }
-
-                int bombX = b.getX();
-                int bombY = b.getY();
-                int playerX = player.getX();
-                int playerY = player.getY();
-
-                if (player.getLives() > 0 && !b.isDestroyed()) {
-
-                    if (bombX >= (playerX)
-                            && bombX <= (playerX + PLAYER_WIDTH)
-                            && bombY >= (playerY)
-                            && bombY <= (playerY + PLAYER_HEIGHT)) {
-                        /*ImageIcon ii
-                                = new ImageIcon(explImg);
-                        player.*/
-                        player.setLives(player.getLives() - 1);
-                        b.setDestroyed(true);
-                    }
-                }
-
-                if (!b.isDestroyed()) {
-
-                    b.setY(b.getY() + 1);
-
-                    if (b.getY() >= GROUND - 8) {
-                        b.setDestroyed(true);
-                    }
-                }
-            }
+            
         } else if (getKeyManager().enter) {
             //init everything
             setGameOver(false);
@@ -449,7 +406,6 @@ public class Game extends JPanel implements Runnable, Commons {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             drawShot(g);
-            drawBomb(g);
             //Renders lives each tick
             for (int i = 0; i < player.getLives(); i++) {
                 Heart heart = hearts.get(i);
