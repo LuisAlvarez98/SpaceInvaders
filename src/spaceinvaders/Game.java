@@ -2,6 +2,7 @@ package spaceinvaders;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
@@ -365,8 +366,12 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
         if (!isGameOver() && isGameStart()) {
-            if (getKeyManager().pause) {
-                paused ^= true;
+            if (!paused && getKeyManager().pause) {
+                paused = true;
+                getKeyManager().keyCheck(KeyEvent.VK_P, true);
+            } else if (getKeyManager().pause && paused) {
+                paused = false;
+                //getKeyManager().keyCheck(KeyEvent.VK_P, false);
             }
             if (!paused) {
                 player.tick();
@@ -460,19 +465,16 @@ public class Game extends JPanel implements Runnable, Commons {
                     int playerX = player.getX();
                     int playerY = player.getY();
 
-                    if (player.getLives() > 0 && !b.isDestroyed()) {
-
-                        if (b.intersects(player)) {
-                            player.setLives(player.getLives() - 1);
-                            b.setDestroyed(true);
-                        }
+                    if (b.intersects(player)) {
+                        System.out.println("acabron");
+                        player.setLives(player.getLives() - 1);
+                        b.setDestroyed(true);
                     }
-
                     if (!b.isDestroyed()) {
 
                         b.setY(b.getY() + 1);
 
-                        if (b.getY() >= GROUND - BOMB_HEIGHT) {
+                        if (b.getY() >= getHeight() - 60) {
                             b.setDestroyed(true);
                         }
                     }
