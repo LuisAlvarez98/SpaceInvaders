@@ -2,6 +2,7 @@ package spaceinvaders;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import javax.swing.ImageIcon;
 
 /**
  * Player class
@@ -14,6 +15,7 @@ public class Alien extends Item {
     private int height;
     private int health;
     private Game game;
+    private Bomb bomb;
     private boolean dead;
 
     /**
@@ -33,6 +35,7 @@ public class Alien extends Item {
         this.game = game;
         this.dead = false;
     }
+    
 
     /**
      * getHeight method
@@ -124,7 +127,11 @@ public class Alien extends Item {
 
         return new Rectangle(getX(), getY(), getWidth(), getHeight() - 50);
     }
-
+    public Bomb getbomb() {
+        return bomb;
+    }
+    
+    
     /**
      * Renders the player
      *
@@ -133,5 +140,29 @@ public class Alien extends Item {
     @Override
     public void render(Graphics g) {
         g.drawImage(Assets.alien,getX(), getY(), getWidth(), getHeight(), null);
+    }
+    public class Bomb extends Sprite {
+        private final String bombImg = "/src/images/bomb.png";
+        private boolean destroyed;
+        
+        public Bomb(int x, int y) {
+            initBomb(x,y);
+        }
+        private void initBomb(int x, int y) {
+            setDestroyed(true);
+            this.x = x;
+            this.y = y;
+            ImageIcon ii = new ImageIcon(bombImg);
+            setImage(ii.getImage());
+        }
+        public void setDestroyed(boolean destroyed) {
+        
+            this.destroyed = destroyed;
+        }
+
+        public boolean isDestroyed() {
+        
+            return destroyed;
+        }
     }
 }

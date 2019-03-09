@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -42,10 +43,12 @@ public class Game extends JPanel implements Runnable, Commons {
 
     private boolean won; // did you win?
     private int enemies; // number of enemies
-
+    
+    private int direction = -1;
     private final int ALIEN_INIT_X = 165;
     private final int ALIEN_INIT_Y = 15;
-       private ArrayList<Alien> aliens;
+    private ArrayList<Alien> aliens;
+
     /**
      * Game Constructor
      *
@@ -181,31 +184,43 @@ public class Game extends JPanel implements Runnable, Commons {
     public int getWidth() {
         return width;
     }
+
     /**
      * inits the game with the display and player
      */
     public void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-        
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
-                 aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, 25,25,this));
+                aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, 25, 25, this));
             }
         }
-        
-        player = new Player(getWidth()/2 - 35,getHeight()-50, 50, 50,this,3);
+
+        player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
         bullet = new Bullet();
         display.getJframe().addKeyListener(keyManager);
     }
-        public void drawShot(Graphics g) {
+
+    public void drawShot(Graphics g) {
 
         if (bullet.isVisible()) {
-            
+
             g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
         }
     }
+
+    public void drawBomb(Graphics g) {
+        for (Alien a : aliens) {
+            Alien.Bomb b = a.getbomb();
+
+            if (!b.isDestroyed()) {
+                g.drawImage(b.getImage(), b.getX(), b.getY(), this);
+            }
+        }
+    }
+
     /**
      * run method
      */
@@ -247,26 +262,26 @@ public class Game extends JPanel implements Runnable, Commons {
         keyManager.tick();
         player.tick();
         //Gamestart
-        if(getKeyManager().space) {
+        if (getKeyManager().space) {
             if (!bullet.isVisible()) {
-                        bullet = new Bullet(player.getX(), player.getY());
-                    }
+                bullet = new Bullet(player.getX(), player.getY());
+            }
         }
         if (bullet.isVisible()) {
 
-            int shotX = bullet.getX();
-            int shotY = bullet.getY();
+            int bulletX = bullet.getX();
+            int bulletY = bullet.getY();
 
-            for (Alien alien: aliens) {
+            for (Alien alien : aliens) {
 
                 int alienX = alien.getX();
                 int alienY = alien.getY();
 
                 if (bullet.isVisible()) {
-                    if (shotX >= (alienX)
-                            && shotX <= (alienX + alien.getWidth())
-                            && shotY >= (alienY)
-                            && shotY <= (alienY + alien.getHeight())) {
+                    if (bulletX >= (alienX)
+                            && bulletX <= (alienX + alien.getWidth())
+                            && bulletY >= (alienY)
+                            && bulletY <= (alienY + alien.getHeight())) {
                         ImageIcon ii
                                 = new ImageIcon(Assets.explosion);
                         bullet.die();
@@ -283,26 +298,20 @@ public class Game extends JPanel implements Runnable, Commons {
                 bullet.setY(y);
             }
         }
-        /*@Override
-        public void keyPressed(KeyEvent e) {
-
-            player.keyPressed(e);
-
-            int x = player.getX();
-            int y = player.getY();
-
-            int key = e.getKeyCode();
-
-            if (key == KeyEvent.VK_SPACE) {
-                
-                if (ingame) {
-                    if (!shot.isVisible()) {
-                        shot = new Shot(x, y);
-                    }
-                }*/
         
+        for(Alien alien : aliens) {
+            int x = alien.getX();
+            
+            if(x >= BOARD_WIDTH - BORDER_RIGHT && direction != -1) {
+                direction = 1;
+                Iterator i_2 = aliens.iterator();
+                while(i_2.hasNext()) {
+                    Alien al = (Alien) i_2.next();
+                    al.setY(al.getY() + GO_DOWN);
+                }
+            }
+        }
     }
-    
 
     /**
      * render method where all the magic happens
@@ -316,8 +325,8 @@ public class Game extends JPanel implements Runnable, Commons {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             drawShot(g);
-            for(int i = 0; i < aliens.size(); i++){
-                  aliens.get(i).render(g);
+            for (int i = 0; i < aliens.size(); i++) {
+                aliens.get(i).render(g);
             }
             g.setColor(Color.WHITE);
             g.drawString("Score: " + getScore(), 10, getHeight() - 485);
