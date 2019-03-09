@@ -204,7 +204,6 @@ public class Game extends JPanel implements Runnable, Commons {
     public void drawShot(Graphics g) {
 
         if (bullet.isVisible()) {
-
             g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
         }
     }
@@ -283,6 +282,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                 && bulletY <= (alienY + aliens.get(i).getHeight())) {
                             ImageIcon ii
                                     = new ImageIcon(Assets.explosion);
+                            aliens.get(i).isDead();
                             bullet.die();
                             aliens.remove(i);
                             score += 5;
@@ -321,7 +321,7 @@ public class Game extends JPanel implements Runnable, Commons {
                 if (aliens.get(i).isVisible()) {
 
                     int y = aliens.get(i).getY();
-                    System.out.println(y);
+                    //System.out.println(y);
                     if (y > GROUND - ALIEN_HEIGHT - 45) {
                         System.out.println("end");
                         setGameOver(true);
@@ -444,6 +444,7 @@ public class Game extends JPanel implements Runnable, Commons {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, ALIEN_HEIGHT, ALIEN_WIDTH, this));
+                
             }
         }
     }
