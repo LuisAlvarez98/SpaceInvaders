@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -31,6 +32,7 @@ public class Game extends JPanel implements Runnable, Commons {
     private Thread thread; //the thread of the game
     private boolean running; //boolean saying if it is running
     private boolean paused; // paused boolean
+    private final String explImg = "src/images/explosion.png";
 
     private ArrayList<Alien> bars; //blocks array list
     private Player player; //player instance
@@ -212,9 +214,9 @@ public class Game extends JPanel implements Runnable, Commons {
         }
     }
 
-    public void drawBomb(Graphics g) {
-        for (Alien a : aliens) {
-            Alien.Bomb b = a.getbomb();
+    public void drawBombs(Graphics g) {
+        for (int i = 0; i < aliens.size(); i++) {
+            Alien.Bomb b = aliens.get(i).getbomb();
 
             if (!b.isDestroyed()) {
                 g.drawImage(b.getImage(), b.getX(), b.getY(), this);
@@ -323,9 +325,51 @@ public class Game extends JPanel implements Runnable, Commons {
 
                     int y = aliens.get(i).getY();
                     System.out.println(y);
-                    if (y > GROUND - ALIEN_HEIGHT - 45 ) {
+                    if (y > GROUND - ALIEN_HEIGHT - 45) {
                         System.out.println("end");
                         setGameOver(true);
+                    }
+                }
+            }
+            Random generator = new Random();
+
+            for (Alien alien : aliens) {
+
+                int shot = generator.nextInt(15);
+                Alien.Bomb b = alien.getBomb();
+
+                if (shot == CHANCE && alien.isVisible() && b.isDestroyed()) {
+
+                    b.setDestroyed(false);
+                    b.setX(alien.getX());
+                    b.setY(alien.getY());
+                }
+
+                int bombX = b.getX();
+                int bombY = b.getY();
+                int playerX = player.getX();
+                int playerY = player.getY();
+
+                if (player.getLives() > 0 && !b.isDestroyed()) {
+
+                    if (bombX >= (playerX)
+                            && bombX <= (playerX + PLAYER_WIDTH)
+                            && bombY >= (playerY)
+                            && bombY <= (playerY + PLAYER_HEIGHT)) {
+                        /*ImageIcon ii
+                                = new ImageIcon(explImg);
+                        player.*/
+                        player.setLives(player.getLives() - 1);
+                        b.setDestroyed(true);
+                    }
+                }
+
+                if (!b.isDestroyed()) {
+
+                    b.setY(b.getY() + 1);
+
+                    if (b.getY() >= GROUND - 8) {
+                        b.setDestroyed(true);
                     }
                 }
             }
@@ -344,9 +388,11 @@ public class Game extends JPanel implements Runnable, Commons {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             drawShot(g);
+            drawBombs(g);
             for (int i = 0; i < aliens.size(); i++) {
                 aliens.get(i).render(g);
             }
+            
             g.setColor(Color.WHITE);
             g.drawString("Score: " + getScore(), 10, getHeight() - 485);
             g.setColor(Color.WHITE);

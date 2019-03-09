@@ -38,6 +38,11 @@ public class Alien extends Item {
         this.dead = false;
         this.direction = 1;
         this.visible = true;
+        
+        bomb = new Bomb(x, y);
+    }
+    public Bomb getBomb() {
+        return bomb;
     }
 
     public boolean isVisible() {
