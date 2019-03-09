@@ -16,6 +16,15 @@ import java.util.LinkedList;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import static spaceinvaders.Commons.ALIEN_HEIGHT;
+import static spaceinvaders.Commons.ALIEN_WIDTH;
+import static spaceinvaders.Commons.BOARD_WIDTH;
+import static spaceinvaders.Commons.BOMB_HEIGHT;
+import static spaceinvaders.Commons.BORDER_LEFT;
+import static spaceinvaders.Commons.BORDER_RIGHT;
+import static spaceinvaders.Commons.GROUND;
+import static spaceinvaders.Commons.PLAYER_HEIGHT;
+import static spaceinvaders.Commons.PLAYER_WIDTH;
 
 /**
  * Game Class Crystal Braker Game
@@ -214,14 +223,13 @@ public class Game extends JPanel implements Runnable, Commons {
     public void drawShot(Graphics g) {
 
         if (bullet.isVisible()) {
-
             g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
         }
     }
 
     public void drawBombs(Graphics g) {
-        for (int i = 0; i < aliens.size(); i++) {
-            Alien.Bomb b = aliens.get(i).getbomb();
+        for (Alien a : aliens) {
+            Alien.Bomb b = a.getbomb();
 
             if (!b.isDestroyed()) {
                 g.drawImage(b.getImage(), b.getX(), b.getY(), this);
@@ -387,6 +395,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                 && bulletY <= (alienY + aliens.get(i).getHeight())) {
                             ImageIcon ii
                                     = new ImageIcon(Assets.explosion);
+                            aliens.get(i).isDead();
                             increaseScore();
                             bullet.die();
                             aliens.remove(i);
@@ -425,7 +434,7 @@ public class Game extends JPanel implements Runnable, Commons {
                 if (aliens.get(i).isVisible()) {
 
                     int y = aliens.get(i).getY();
-                    System.out.println(y);
+                    //System.out.println(y);
                     if (y > GROUND - ALIEN_HEIGHT - 45) {
                         System.out.println("end");
                         setGameOver(true);
@@ -433,65 +442,26 @@ public class Game extends JPanel implements Runnable, Commons {
                     }
                 }
             }
-            // bombs
-            Random generator = new Random();
+               // bombs
+        Random generator = new Random();
 
-            for (Alien alien : aliens) {
+        for (Alien alien: aliens) {
 
-                int shot = generator.nextInt(15);
-                Alien.Bomb b = alien.getbomb();
-
-                if (shot == CHANCE && alien.isVisible() && b.isDestroyed()) {
-
+            int shot = generator.nextInt(15);
+            Alien.Bomb b = alien.getbomb();
+            System.out.println(shot);
+            if (shot == 5 && alien.isVisible() && b.isDestroyed()) {
                     b.setDestroyed(false);
                     b.setX(alien.getX());
                     b.setY(alien.getY());
+                    
                 }
 
                 int bombX = b.getX();
                 int bombY = b.getY();
                 int playerX = player.getX();
                 int playerY = player.getY();
-
-                if (player.isVisible() && !b.isDestroyed()) {
-
-                    if (bombX >= (playerX)
-                            && bombX <= (playerX + PLAYER_WIDTH)
-                            && bombY >= (playerY)
-                            && bombY <= (playerY + PLAYER_HEIGHT)) {
-                        b.setDestroyed(true);
-                    }
-                }
-
-                if (!b.isDestroyed()) {
-
-                    b.setY(b.getY() + 1);
-
-                    if (b.getY() >= GROUND - BOMB_HEIGHT) {
-                        b.setDestroyed(true);
-                    }
-                }
-            }
-            if (player.getLives() <= 0) {
-                setGameOver(true);
-            }
-            generator = new Random();
-            for (Alien alien : aliens) {
-
-                int shot = generator.nextInt(15);
-                Alien.Bomb b = alien.getBomb();
-
-                if (shot == CHANCE && alien.isVisible() && b.isDestroyed()) {
-
-                    b.setDestroyed(false);
-                    b.setX(alien.getX());
-                    b.setY(alien.getY());
-                }
-
-                int bombX = b.getX();
-                int bombY = b.getY();
-                int playerX = player.getX();
-                int playerY = player.getY();
+                System.out.println(b.isDestroyed());
 
                 if (player.getLives() > 0 && !b.isDestroyed()) {
 
@@ -507,15 +477,21 @@ public class Game extends JPanel implements Runnable, Commons {
                     }
                 }
 
-                if (!b.isDestroyed()) {
 
-                    b.setY(b.getY() + 1);
-
-                    if (b.getY() >= GROUND - 8) {
-                        b.setDestroyed(true);
-                    }
+            if (!b.isDestroyed()) {
+                
+                b.setY(b.getY() + 1);
+                
+                if (b.getY() >= GROUND - BOMB_HEIGHT) {
+                    b.setDestroyed(true);
                 }
             }
+        }
+        
+            if (player.getLives() <= 0) {
+                setGameOver(true);
+            }
+            
         } else if (getKeyManager().enter) {
             //init everything
             setGameOver(false);
@@ -524,7 +500,7 @@ public class Game extends JPanel implements Runnable, Commons {
             player.setLives(3);
             setScore(0);
             //RESETS PLAYER, BULLET AND ALIENS
-            aliens = new ArrayList<Alien>();
+
             initAliens();
             player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
             bullet = new Bullet();
@@ -543,7 +519,7 @@ public class Game extends JPanel implements Runnable, Commons {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             drawShot(g);
-            drawBombs(g);
+            
             //Renders lives each tick
             for (int i = 0; i < player.getLives(); i++) {
                 Heart heart = hearts.get(i);
@@ -551,9 +527,7 @@ public class Game extends JPanel implements Runnable, Commons {
             }
             drawBombs(g);
             for (int i = 0; i < aliens.size(); i++) {
-                if (!aliens.get(i).isDead()) {
-                    aliens.get(i).render(g);
-                }
+                aliens.get(i).render(g);
             }
             if(!isGameStart()){
                  g.drawImage(Assets.start, 0, 0, width, height, null);
@@ -599,6 +573,7 @@ public class Game extends JPanel implements Runnable, Commons {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, ALIEN_HEIGHT, ALIEN_WIDTH, this));
+                
             }
         }
     }

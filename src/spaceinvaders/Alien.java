@@ -174,10 +174,10 @@ public class Alien extends Item {
         private boolean destroyed;
         
         public Bomb(int x, int y) {
-          int randNum = (int) (Math.random() * 100 + 1);
-            if(randNum%5==0) {
+            int randNum = (int) (Math.random() * 100 + 1);
+            if(randNum%6==0) {
                 initBomb(x,y);
-            }
+            }            
         }
         private void initBomb(int x, int y) {
             setDestroyed(true);
