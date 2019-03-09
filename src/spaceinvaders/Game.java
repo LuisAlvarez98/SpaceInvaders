@@ -16,6 +16,15 @@ import java.util.LinkedList;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import static spaceinvaders.Commons.ALIEN_HEIGHT;
+import static spaceinvaders.Commons.ALIEN_WIDTH;
+import static spaceinvaders.Commons.BOARD_WIDTH;
+import static spaceinvaders.Commons.BOMB_HEIGHT;
+import static spaceinvaders.Commons.BORDER_LEFT;
+import static spaceinvaders.Commons.BORDER_RIGHT;
+import static spaceinvaders.Commons.GROUND;
+import static spaceinvaders.Commons.PLAYER_HEIGHT;
+import static spaceinvaders.Commons.PLAYER_WIDTH;
 
 /**
  * Game Class Crystal Braker Game
