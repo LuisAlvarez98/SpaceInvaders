@@ -54,7 +54,6 @@ public class Game extends JPanel implements Runnable, Commons {
     private boolean gameStart; //gamestart boolean
 
     private boolean won; // did you win?
-    private int enemies; // number of enemies
 
     private final int ALIEN_INIT_X = 165;
     private final int ALIEN_INIT_Y = 15;
@@ -81,7 +80,6 @@ public class Game extends JPanel implements Runnable, Commons {
         this.score = 0;
         this.gameStart = false;
         this.won = false;
-        this.enemies = 0;
         this.hearts = new LinkedList<Heart>();
     }
 
@@ -276,7 +274,7 @@ public class Game extends JPanel implements Runnable, Commons {
      */
     private void tick() {
         keyManager.tick();
-        
+
         if (getKeyManager().enter) {
             setGameStart(true);
         }
@@ -305,15 +303,13 @@ public class Game extends JPanel implements Runnable, Commons {
                 bullet.setX(Integer.parseInt(bufferedReader.readLine()));
                 bullet.setY(Integer.parseInt(bufferedReader.readLine()));
 
-                for (int i = 0; i < 6; i++) {
-                    for (int j = 0; j < 6; j++) {
-                        Alien alien = aliens.get(i);
-                        alien.setX(Integer.parseInt(bufferedReader.readLine()));
-                        alien.setY(Integer.parseInt(bufferedReader.readLine()));
-                        int dead = Integer.parseInt(bufferedReader.readLine());
-                        //if dead is true
-                        alien.setDead(dead == 1);
-                    }
+                for (int i = 0; i < 36; i++) {
+                    Alien alien = aliens.get(i);
+                    alien.setX(Integer.parseInt(bufferedReader.readLine()));
+                    alien.setY(Integer.parseInt(bufferedReader.readLine()));
+                    int dead = Integer.parseInt(bufferedReader.readLine());
+                    //if dead is true
+                    alien.setDead(dead == 1);
                 }
 
                 bufferedReader.close();
@@ -352,14 +348,12 @@ public class Game extends JPanel implements Runnable, Commons {
                     bufferedWriter.write(Integer.toString(bullet.getX()) + '\n');
                     bufferedWriter.write(Integer.toString(bullet.getY()) + '\n');
 
-                    for (int i = 0; i < 6; i++) {
-                        for (int j = 0; j < 6; j++) {
-                            Alien alien = aliens.get(i);
-                            bufferedWriter.write(Integer.toString(alien.getX()) + '\n');
-                            bufferedWriter.write(Integer.toString(alien.getY()) + '\n');
-                            int dead = (alien.isDead() ? 1 : 0);
-                            bufferedWriter.write(Integer.toString(dead) + '\n');
-                        }
+                    for (int i = 0; i < 36; i++) {
+                        Alien alien = aliens.get(i);
+                        bufferedWriter.write(Integer.toString(alien.getX()) + '\n');
+                        bufferedWriter.write(Integer.toString(alien.getY()) + '\n');
+                        int dead = (alien.isDead() ? 1 : 0);
+                        bufferedWriter.write(Integer.toString(dead) + '\n');
                     }
                     // Always close files.
                     bufferedWriter.close();
@@ -371,120 +365,124 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
         if (!isGameOver() && isGameStart()) {
-            player.tick();
-            //Gamestart
-            if (getKeyManager().space) {
-                if (!bullet.isVisible()) {
-                    bullet = new Bullet(player.getX(), player.getY());
-                }
+            if (getKeyManager().pause) {
+                paused ^= true;
             }
-            if (bullet.isVisible()) {
+            if (!paused) {
+                player.tick();
+                //Gamestart
+                if (getKeyManager().space) {
+                    if (!bullet.isVisible()) {
+                        bullet = new Bullet(player.getX(), player.getY());
+                    }
+                }
+                if (bullet.isVisible()) {
 
-                int bulletX = bullet.getX();
-                int bulletY = bullet.getY();
+                    int bulletX = bullet.getX();
+                    int bulletY = bullet.getY();
+
+                    for (int i = 0; i < aliens.size(); i++) {
+
+                        int alienX = aliens.get(i).getX();
+                        int alienY = aliens.get(i).getY();
+
+                        if (bullet.isVisible()) {
+                            if (bulletX >= (alienX)
+                                    && bulletX <= (alienX + aliens.get(i).getWidth())
+                                    && bulletY >= (alienY)
+                                    && bulletY <= (alienY + aliens.get(i).getHeight())) {
+                                ImageIcon ii
+                                        = new ImageIcon(Assets.explosion);
+                                increaseScore();
+                                bullet.die();
+                                aliens.get(i).setDead(true);
+
+                            }
+                        }
+                    }
+
+                    int y = bullet.getY();
+                    y -= 4;
+
+                    if (y < 0) {
+                        bullet.die();
+                    } else {
+                        bullet.setY(y);
+                    }
+                }
 
                 for (int i = 0; i < aliens.size(); i++) {
 
-                    int alienX = aliens.get(i).getX();
-                    int alienY = aliens.get(i).getY();
+                    int x = aliens.get(i).getX();
+                    aliens.get(i).tick();
+                    if (x >= BOARD_WIDTH - BORDER_RIGHT) {
+                        for (int j = 0; j < aliens.size(); j++) {
+                            aliens.get(j).setY(aliens.get(j).getY() + 3);
+                            aliens.get(j).setDirection(-1);
+                        }
 
-                    if (bullet.isVisible()) {
-                        if (bulletX >= (alienX)
-                                && bulletX <= (alienX + aliens.get(i).getWidth())
-                                && bulletY >= (alienY)
-                                && bulletY <= (alienY + aliens.get(i).getHeight())) {
-                            ImageIcon ii
-                                    = new ImageIcon(Assets.explosion);
-                            aliens.get(i).isDead();
-                            increaseScore();
-                            bullet.die();
-                            aliens.remove(i);
+                    }
+
+                    if (x <= BORDER_LEFT) {
+                        for (int j = 0; j < aliens.size(); j++) {
+                            aliens.get(j).setY(aliens.get(j).getY() + 3);
+                            aliens.get(j).setDirection(1);
+                        }
+                    }
+                    if (aliens.get(i).isVisible()) {
+
+                        int y = aliens.get(i).getY();
+                        //System.out.println(y);
+                        if (y > GROUND - ALIEN_HEIGHT - 45) {
+                            System.out.println("end");
+                            setGameOver(true);
+
+                        }
+                    }
+                }
+                // bombs
+                Random generator = new Random();
+
+                for (Alien alien : aliens) {
+
+                    int shot = generator.nextInt(15);
+                    Alien.Bomb b = alien.getbomb();
+                    System.out.println(shot);
+                    if (shot == 5 && alien.isVisible() && b.isDestroyed()) {
+                        b.setDestroyed(false);
+                        b.setX(alien.getX());
+                        b.setY(alien.getY());
+
+                    }
+
+                    int bombX = b.getX();
+                    int bombY = b.getY();
+                    int playerX = player.getX();
+                    int playerY = player.getY();
+
+                    if (player.getLives() > 0 && !b.isDestroyed()) {
+
+                        if (b.intersects(player)) {
+                            player.setLives(player.getLives() - 1);
+                            b.setDestroyed(true);
+                        }
+                    }
+
+                    if (!b.isDestroyed()) {
+
+                        b.setY(b.getY() + 1);
+
+                        if (b.getY() >= GROUND - BOMB_HEIGHT) {
+                            b.setDestroyed(true);
                         }
                     }
                 }
 
-                int y = bullet.getY();
-                y -= 4;
-
-                if (y < 0) {
-                    bullet.die();
-                } else {
-                    bullet.setY(y);
+                if (player.getLives() <= 0) {
+                    setGameOver(true);
                 }
             }
 
-            for (int i = 0; i < aliens.size(); i++) {
-
-                int x = aliens.get(i).getX();
-                aliens.get(i).tick();
-                if (x >= BOARD_WIDTH - BORDER_RIGHT) {
-                    for (int j = 0; j < aliens.size(); j++) {
-                        aliens.get(j).setY(aliens.get(j).getY() + 3);
-                        aliens.get(j).setDirection(-1);
-                    }
-
-                }
-
-                if (x <= BORDER_LEFT) {
-                    for (int j = 0; j < aliens.size(); j++) {
-                        aliens.get(j).setY(aliens.get(j).getY() + 3);
-                        aliens.get(j).setDirection(1);
-                    }
-                }
-                if (aliens.get(i).isVisible()) {
-
-                    int y = aliens.get(i).getY();
-                    //System.out.println(y);
-                    if (y > GROUND - ALIEN_HEIGHT - 45) {
-                        System.out.println("end");
-                        setGameOver(true);
-
-                    }
-                }
-            }
-               // bombs
-        Random generator = new Random();
-
-        for (Alien alien: aliens) {
-
-            int shot = generator.nextInt(15);
-            Alien.Bomb b = alien.getbomb();
-            System.out.println(shot);
-            if (shot == 5 && alien.isVisible() && b.isDestroyed()) {
-                    b.setDestroyed(false);
-                    b.setX(alien.getX());
-                    b.setY(alien.getY());
-                    
-                }
-
-                int bombX = b.getX();
-                int bombY = b.getY();
-                int playerX = player.getX();
-                int playerY = player.getY();
-
-                if (player.getLives() > 0 && !b.isDestroyed()) {
-
-                    if (b.intersects(player)) {
-                        player.setLives(player.getLives() - 1);
-                        b.setDestroyed(true);
-                    }
-                }
-
-
-            if (!b.isDestroyed()) {
-                
-                b.setY(b.getY() + 1);
-                
-                if (b.getY() >= GROUND - BOMB_HEIGHT) {
-                    b.setDestroyed(true);
-                }
-            }
-        }
-        
-            if (player.getLives() <= 0) {
-                setGameOver(true);
-            }
-            
         } else if (getKeyManager().enter) {
             //init everything
             setGameOver(false);
@@ -512,7 +510,7 @@ public class Game extends JPanel implements Runnable, Commons {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             drawShot(g);
-            
+
             //Renders lives each tick
             for (int i = 0; i < player.getLives(); i++) {
                 Heart heart = hearts.get(i);
@@ -520,10 +518,15 @@ public class Game extends JPanel implements Runnable, Commons {
             }
             drawBombs(g);
             for (int i = 0; i < aliens.size(); i++) {
-                aliens.get(i).render(g);
+                if (!aliens.get(i).isDead()) {
+                    aliens.get(i).render(g);
+                }
             }
-            if(!isGameStart()){
-                 g.drawImage(Assets.start, 0, 0, width, height, null);
+            if (paused) {
+                g.drawImage(Assets.paused, 0, 0, width, height, null);
+            }
+            if (!isGameStart()) {
+                g.drawImage(Assets.start, 0, 0, width, height, null);
             }
             if (isGameOver()) {
                 g.drawImage(Assets.gameover, 0, 0, width, height, null);
@@ -566,7 +569,7 @@ public class Game extends JPanel implements Runnable, Commons {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 aliens.add(new Alien(ALIEN_INIT_X + 25 * j, ALIEN_INIT_Y + 25 * i, ALIEN_HEIGHT, ALIEN_WIDTH, this));
-                
+
             }
         }
     }

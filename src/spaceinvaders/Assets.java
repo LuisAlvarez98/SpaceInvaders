@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  */
 public class Assets {
 
-    public static BufferedImage player, alien, background, bullet, explosion, gameover, bomb, start;
+    public static BufferedImage player, alien, background, bullet, explosion, gameover, bomb, start, paused;
     public static SoundClip main;
 
     /**
@@ -22,8 +22,9 @@ public class Assets {
         bullet = ImageLoader.loadImage("/images/bullet.png");
         explosion = ImageLoader.loadImage("/images/explosion.png");
         gameover = ImageLoader.loadImage("/images/gameover.png");
-         start = ImageLoader.loadImage("/images/start.png");
+        start = ImageLoader.loadImage("/images/start.png");
         bomb = ImageLoader.loadImage("/images/bomb.png");
+        paused = ImageLoader.loadImage("/images/paused.png");
 
         main = new SoundClip("/sounds/space.wav");
     }
