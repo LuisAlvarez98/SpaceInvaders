@@ -38,10 +38,6 @@ public class Alien extends Item {
         this.dead = false;
         this.direction = 1;
         this.visible =true;
-        
-        
-        this.x = x;
-        this.y = y;
         bomb = new Bomb(x, y);
         this.visible = true;
     }
@@ -178,7 +174,10 @@ public class Alien extends Item {
         private boolean destroyed;
         
         public Bomb(int x, int y) {
-            initBomb(x,y);
+          int randNum = (int) (Math.random() * 100 + 1);
+            if(randNum%5==0) {
+                initBomb(x,y);
+            }
         }
         private void initBomb(int x, int y) {
             setDestroyed(true);

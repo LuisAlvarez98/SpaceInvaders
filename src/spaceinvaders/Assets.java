@@ -19,7 +19,7 @@ public class Assets {
         bullet = ImageLoader.loadImage("/images/bullet.png");
         explosion = ImageLoader.loadImage("/images/explosion.png");
         gameover = ImageLoader.loadImage("/images/gameover.png");
-        bomb = ImageLoader.loadImage("/images/bullet.png");
+        bomb = ImageLoader.loadImage("/images/bomb.png");
     }
     
 }
