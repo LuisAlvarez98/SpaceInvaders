@@ -150,7 +150,7 @@ public class Game extends JPanel implements Runnable, Commons {
      * IncreaseScore method increases score by 10
      */
     public void increaseScore() {
-        this.score += 10;
+        this.score += 100;
     }
 
     /**
@@ -288,6 +288,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                 && bulletY <= (alienY + aliens.get(i).getHeight())) {
                             ImageIcon ii
                                     = new ImageIcon(Assets.explosion);
+                            increaseScore();
                             bullet.die();
                             aliens.remove(i);
                         }

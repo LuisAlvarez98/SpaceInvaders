@@ -37,7 +37,7 @@ public class Alien extends Item {
         this.game = game;
         this.dead = false;
         this.direction = 1;
-        this.visible = true;
+        this.visible =true;
     }
 
     public boolean isVisible() {
