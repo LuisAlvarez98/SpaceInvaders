@@ -43,6 +43,10 @@ public class Alien extends Item {
         this.x = x;
         this.y = y;
         bomb = new Bomb(x, y);
+        this.visible = true;
+    }
+    public Bomb getBomb() {
+        return bomb;
     }
 
     public boolean isVisible() {
