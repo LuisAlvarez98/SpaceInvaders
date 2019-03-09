@@ -37,10 +37,11 @@ public class Alien extends Item {
         this.game = game;
         this.dead = false;
         this.direction = 1;
-        this.visible =true;
+        this.visible = true;
         bomb = new Bomb(x, y);
         this.visible = true;
     }
+
     public Bomb getBomb() {
         return bomb;
     }
@@ -53,7 +54,6 @@ public class Alien extends Item {
         this.visible = visible;
     }
 
-    
     public int getDirection() {
         return direction;
     }
@@ -139,9 +139,9 @@ public class Alien extends Item {
      */
     @Override
     public void tick() {
-        if(getDirection() >= 1){
-              this.x += +1;
-        }else{
+        if (getDirection() >= 1) {
+            this.x += +1;
+        } else {
             this.x += -1;
         }
     }
@@ -156,11 +156,11 @@ public class Alien extends Item {
 
         return new Rectangle(getX(), getY(), getWidth(), getHeight() - 50);
     }
+
     public Bomb getbomb() {
         return bomb;
     }
-    
-    
+
     /**
      * Renders the player
      *
@@ -168,31 +168,44 @@ public class Alien extends Item {
      */
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.alien,getX(), getY(), getWidth(), getHeight(), null);
+        g.drawImage(Assets.alien, getX(), getY(), getWidth(), getHeight(), null);
     }
+
     public class Bomb extends Sprite {
+
         private boolean destroyed;
-        
+
         public Bomb(int x, int y) {
             int randNum = (int) (Math.random() * 100 + 1);
-            if(randNum%6==0) {
-                initBomb(x,y);
-            }            
+            if (randNum % 6 == 0) {
+                initBomb(x, y);
+            }
         }
+
         private void initBomb(int x, int y) {
             setDestroyed(true);
             this.x = x;
             this.y = y;
             setImage(Assets.bomb);
         }
+
         public void setDestroyed(boolean destroyed) {
-        
+
             this.destroyed = destroyed;
         }
 
+        public Rectangle getPerimetro() {
+            return new Rectangle(getX(), getY(), 7, 7);
+        }
+
+        public boolean intersects(Player player) {
+            return player instanceof Player && getPerimetro().intersects(((Player) player).getPerimetro());
+        }
+
         public boolean isDestroyed() {
-        
+
             return destroyed;
         }
+
     }
 }

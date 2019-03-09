@@ -204,8 +204,11 @@ public class Game extends JPanel implements Runnable, Commons {
      * inits the game with the display and player
      */
     public void init() {
+
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
+        Assets.main.play();
+        Assets.main.setLooping(true);
 
         initAliens();
         hearts.add(new Heart(0, 20, 25, 25));
@@ -273,7 +276,101 @@ public class Game extends JPanel implements Runnable, Commons {
      */
     private void tick() {
         keyManager.tick();
-        if (!isGameOver()) {
+        
+        if (getKeyManager().enter) {
+            setGameStart(true);
+        }
+        if (getKeyManager().load && !isGameStart()) {
+            //setGameStart(true);
+            //load game
+            // The name of the file to open.
+            String fileName = "gamesave.txt";
+
+            // This will reference one line at a time
+            String line = null;
+
+            try {
+                // FileReader reads text files in the default encoding.
+                FileReader fileReader
+                        = new FileReader(fileName);
+
+                // Always wrap FileReader in BufferedReader.
+                BufferedReader bufferedReader
+                        = new BufferedReader(fileReader);
+                //reads everything from the file
+                setScore(Integer.parseInt(bufferedReader.readLine()));
+                player.setLives(Integer.parseInt(bufferedReader.readLine()));
+                player.setX(Integer.parseInt(bufferedReader.readLine()));
+                player.setY(Integer.parseInt(bufferedReader.readLine()));
+                bullet.setX(Integer.parseInt(bufferedReader.readLine()));
+                bullet.setY(Integer.parseInt(bufferedReader.readLine()));
+
+                for (int i = 0; i < 6; i++) {
+                    for (int j = 0; j < 6; j++) {
+                        Alien alien = aliens.get(i);
+                        alien.setX(Integer.parseInt(bufferedReader.readLine()));
+                        alien.setY(Integer.parseInt(bufferedReader.readLine()));
+                        int dead = Integer.parseInt(bufferedReader.readLine());
+                        //if dead is true
+                        alien.setDead(dead == 1);
+                    }
+                }
+
+                bufferedReader.close();
+            } catch (FileNotFoundException ex) {
+                System.out.println(
+                        "Unable to open file '"
+                        + fileName + "'");
+            } catch (IOException ex) {
+                System.out.println(
+                        "Error reading file '"
+                        + fileName + "'");
+            }
+        }
+        if (getKeyManager().save && !isGameOver()) {
+            //counter used to avoid multiple clicks
+            int count = 0;
+            if (count == 0) {
+                count++;
+                // The name of the file to open.
+                String fileName = "gamesave.txt";
+
+                try {
+                    // Assume default encoding.
+                    FileWriter fileWriter
+                            = new FileWriter(fileName);
+
+                    // Always wrap FileWriter in BufferedWriter.
+                    BufferedWriter bufferedWriter
+                            = new BufferedWriter(fileWriter);
+
+                    // saves everything on the textfile
+                    bufferedWriter.write(Integer.toString(getScore()) + '\n');
+                    bufferedWriter.write(Integer.toString(player.getLives()) + '\n');
+                    bufferedWriter.write(Integer.toString(player.getX()) + '\n');
+                    bufferedWriter.write(Integer.toString(player.getY()) + '\n');
+                    bufferedWriter.write(Integer.toString(bullet.getX()) + '\n');
+                    bufferedWriter.write(Integer.toString(bullet.getY()) + '\n');
+
+                    for (int i = 0; i < 6; i++) {
+                        for (int j = 0; j < 6; j++) {
+                            Alien alien = aliens.get(i);
+                            bufferedWriter.write(Integer.toString(alien.getX()) + '\n');
+                            bufferedWriter.write(Integer.toString(alien.getY()) + '\n');
+                            int dead = (alien.isDead() ? 1 : 0);
+                            bufferedWriter.write(Integer.toString(dead) + '\n');
+                        }
+                    }
+                    // Always close files.
+                    bufferedWriter.close();
+                } catch (IOException ex) {
+                    System.out.println(
+                            "Error writing to file '"
+                            + fileName + "'");
+                }
+            }
+        }
+        if (!isGameOver() && isGameStart()) {
             player.tick();
             //Gamestart
             if (getKeyManager().space) {
@@ -353,6 +450,18 @@ public class Game extends JPanel implements Runnable, Commons {
             int shot = generator.nextInt(15);
             Alien.Bomb b = alien.getbomb();
 
+                int bombX = b.getX();
+                int bombY = b.getY();
+                int playerX = player.getX();
+                int playerY = player.getY();
+
+                if (player.getLives() > 0 && !b.isDestroyed()) {
+
+                    if (b.intersects(player)) {
+                        player.setLives(player.getLives() - 1);
+                        b.setDestroyed(true);
+                    }
+                }
 
             if (shot == CHANCE && alien.isVisible() && b.isDestroyed()) {
 
@@ -361,12 +470,12 @@ public class Game extends JPanel implements Runnable, Commons {
                 b.setY(alien.getY());
             }
 
-            int bombX = b.getX();
+            /*int bombX = b.getX();
             int bombY = b.getY();
             int playerX = player.getX();
-            int playerY = player.getY();
+            int playerY = player.getY();*/
 
-            if (player.isVisible() && !b.isDestroyed()) {
+            if (player.getLives() > 0 && !b.isDestroyed()) {
 
                 if (bombX >= (playerX)
                         && bombX <= (playerX + PLAYER_WIDTH)
@@ -380,9 +489,9 @@ public class Game extends JPanel implements Runnable, Commons {
                 
                 b.setY(b.getY() + 1);
                 
-                if (b.getY() >= GROUND - BOMB_HEIGHT) {
-                    b.setDestroyed(true);
-                }
+                /*if (b.getY() >= GROUND - BOMB_HEIGHT) {
+                   b.setDestroyed(true);
+                }*/
             }
         }
 
@@ -398,7 +507,7 @@ public class Game extends JPanel implements Runnable, Commons {
             player.setLives(3);
             setScore(0);
             //RESETS PLAYER, BULLET AND ALIENS
-
+            aliens = new ArrayList<Alien>();
             initAliens();
             player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
             bullet = new Bullet();
@@ -427,9 +536,11 @@ public class Game extends JPanel implements Runnable, Commons {
             for (int i = 0; i < aliens.size(); i++) {
                 aliens.get(i).render(g);
             }
-
+            if(!isGameStart()){
+                 g.drawImage(Assets.start, 0, 0, width, height, null);
+            }
             if (isGameOver()) {
-                g.drawImage(Assets.gameover, 125, getHeight() / 2 - 150, 250, 250, null);
+                g.drawImage(Assets.gameover, 0, 0, width, height, null);
                 aliens.remove(g);
             }
             g.setColor(Color.WHITE);
