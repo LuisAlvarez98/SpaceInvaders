@@ -37,9 +37,13 @@ public class Alien extends Item {
         this.game = game;
         this.dead = false;
         this.direction = 1;
-        this.visible = true;
+        this.visible =true;
         
+        
+        this.x = x;
+        this.y = y;
         bomb = new Bomb(x, y);
+        this.visible = true;
     }
     public Bomb getBomb() {
         return bomb;
@@ -171,18 +175,20 @@ public class Alien extends Item {
         g.drawImage(Assets.alien,getX(), getY(), getWidth(), getHeight(), null);
     }
     public class Bomb extends Sprite {
-        private final String bombImg = "/src/images/bomb.png";
         private boolean destroyed;
         
         public Bomb(int x, int y) {
-            initBomb(x,y);
+            int randNum = (int) (Math.random() * 100 + 1);
+            if(randNum%6==0) {
+                initBomb(x,y);
+            }
+            
         }
         private void initBomb(int x, int y) {
             setDestroyed(true);
             this.x = x;
             this.y = y;
-            ImageIcon ii = new ImageIcon(bombImg);
-            setImage(ii.getImage());
+            setImage(Assets.bomb);
         }
         public void setDestroyed(boolean destroyed) {
         

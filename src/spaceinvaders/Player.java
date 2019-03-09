@@ -18,6 +18,7 @@ public class Player extends Item {
     private Game game;
     private Bullet bullet;
     private int lives;
+    private boolean visible;
 
     /**
      * Player constructor
@@ -36,6 +37,7 @@ public class Player extends Item {
         this.height = height;
         this.game = game;
         this.lives = lives;
+        this.visible = true;
     }
     /**
      * decreases the player lives by one
@@ -152,5 +154,9 @@ public class Player extends Item {
     public void render(Graphics g) {
         //draws the player
         g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
+    }
+
+    boolean isVisible() {
+        return visible;
     }
 }
