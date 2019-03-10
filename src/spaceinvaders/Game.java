@@ -377,12 +377,10 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
         if (!isGameOver() && isGameStart()) {
-            if (!paused && getKeyManager().pause) {
-                paused = true;
-                getKeyManager().keyCheck(KeyEvent.VK_P, true);
-            } else if (getKeyManager().pause && paused) {
-                paused = false;
-                //getKeyManager().keyCheck(KeyEvent.VK_P, false);
+            if(getKeyManager().pause){
+                getKeyManager().setKeyDown();
+                paused = !paused;
+                
             }
             if (!paused) {
                 player.tick();
@@ -411,7 +409,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                         = new ImageIcon(Assets.explosion);
                                 increaseScore();
                                 bullet.die();
-                                aliens.get(i).setDead(true);
+                                aliens.remove(i);
                                 setAlienSize(aliens.size());
                                 System.out.println(getAlienSize());
 
@@ -451,7 +449,7 @@ public class Game extends JPanel implements Runnable, Commons {
 
                         int y = aliens.get(i).getY();
                         //System.out.println(y);
-                        if (y > GROUND - ALIEN_HEIGHT - 45) {
+                        if (y > GROUND - ALIEN_HEIGHT - 20) {
                             System.out.println("end");
                             setGameOver(true);
 

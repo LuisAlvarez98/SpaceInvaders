@@ -71,20 +71,15 @@ public class KeyManager implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // set true to every key pressed
         keys[e.getKeyCode()] = true;
-        if (e.getKeyCode() == KeyEvent.VK_P) {
-            keys[e.getKeyCode()] = true;
-        }
-
     }
-
+    public void setKeyDown(){
+          keys[KeyEvent.VK_P] = false;
+    }
     @Override
     public void keyReleased(KeyEvent e) {
         // set false to every key released
         keys[e.getKeyCode()] = false;
 
-        if (e.getKeyCode() == KeyEvent.VK_P) {
-            keys[e.getKeyCode()] = true;
-        }
     }
 
      public void keyCheck(int key, boolean checker){
