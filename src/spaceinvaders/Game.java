@@ -411,7 +411,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                         = new ImageIcon(Assets.explosion);
                                 increaseScore();
                                 bullet.die();
-                                aliens.remove(i);
+                                aliens.get(i).setDead(true);
                                 setAlienSize(aliens.size());
                                 System.out.println(getAlienSize());
 

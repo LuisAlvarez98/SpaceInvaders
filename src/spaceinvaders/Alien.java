@@ -196,15 +196,11 @@ public class Alien extends Item {
         }
 
         public Rectangle getPerimetro() {
-<<<<<<< HEAD
             return new Rectangle(getX(), getY(), 10, 10);
-=======
-            return new Rectangle(getX(), getY(), 7, 7);
         }
 
         public boolean intersects(Player player) {
             return player instanceof Player && getPerimetro().intersects(((Player) player).getPerimetro());
->>>>>>> ad055b4e024fbf1e62ec1003c5a7a269f8d29bbf
         }
 
         public boolean isDestroyed() {
