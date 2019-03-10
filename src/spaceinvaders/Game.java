@@ -377,10 +377,10 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
         if (!isGameOver() && isGameStart()) {
-            if(getKeyManager().pause){
+            if (getKeyManager().pause) {
                 getKeyManager().setKeyDown();
                 paused = !paused;
-                
+
             }
             if (!paused) {
                 player.tick();
@@ -389,6 +389,16 @@ public class Game extends JPanel implements Runnable, Commons {
                     if (!bullet.isVisible()) {
                         bullet = new Bullet(player.getX(), player.getY());
                     }
+                }
+                if (getKeyManager().restart) {
+                    //Resets lives and score
+                    player.setLives(3);
+                    setScore(0);
+                    //RESETS PLAYER, BULLET AND ALIENS
+                    aliens = new ArrayList<Alien>();
+                    initAliens();
+                    player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
+                    bullet = new Bullet();
                 }
                 if (bullet.isVisible()) {
 

@@ -25,6 +25,7 @@ public class KeyManager implements KeyListener {
     public boolean enter;
     public boolean save;
     public boolean load;
+    public boolean restart;
 
     private boolean keys[]; // to store all the flags for every key
 
@@ -96,5 +97,6 @@ public class KeyManager implements KeyListener {
         enter = keys[KeyEvent.VK_ENTER];
         save = keys[KeyEvent.VK_S];
         load = keys[KeyEvent.VK_L];
+        restart = keys[KeyEvent.VK_R];
     }
 }
