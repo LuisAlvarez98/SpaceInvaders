@@ -235,8 +235,9 @@ public class Game extends JPanel implements Runnable, Commons {
 
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-        Assets.main.play();
         Assets.main.setLooping(true);
+        Assets.main.play();
+        
 
         initAliens();
         hearts.add(new Heart(0, 20, 25, 25));
@@ -353,7 +354,7 @@ public class Game extends JPanel implements Runnable, Commons {
                         + fileName + "'");
             }
         }
-        if (getKeyManager().save && !isGameOver()) {
+        if (getKeyManager().save && !isGameOver() && isGameStart()) {
             //counter used to avoid multiple clicks
             int count = 0;
             if (count == 0) {
@@ -395,7 +396,12 @@ public class Game extends JPanel implements Runnable, Commons {
                 }
             }
         }
+<<<<<<< HEAD
         if (!isGameOver() && isGameStart() && !isGoodGame()) {
+=======
+        
+        if (!isGameOver() && isGameStart()) {
+>>>>>>> 20b0ba4b43520ee70af18405d71db818965e09ec
             if (getKeyManager().pause) {
                 getKeyManager().setKeyDown();
                 paused = !paused;
@@ -437,6 +443,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                 ImageIcon ii
                                         = new ImageIcon(Assets.explosion);
                                 increaseScore();
+                                Assets.bombExp.play();
                                 bullet.die();
                                 aliens.get(i).setDead(true);
                                 setAlienSize(getAlienSize() - 1);
@@ -502,12 +509,28 @@ public class Game extends JPanel implements Runnable, Commons {
                     int bombY = b.getY();
                     int playerX = player.getX();
                     int playerY = player.getY();
-                    if (player.isVisible()) {
+                    if (!b.isDestroyed()) {
+
+                        b.setY(b.getY() + 5);
+
+                        if (b.getY() >= GROUND - 35) {
+                            //b.setY(b.getY() - 50);
+                            b.setDestroyed(true);
+                        }
+                    }
+                    if (player.isVisible() && !b.isDestroyed()) {
 
                         if (bombX >= (playerX)
+<<<<<<< HEAD
                                 && bombX <= (playerX + 4)
                                 && bombY >= (playerY)
                                 && bombY <= (playerY + 4) && !b.isDestroyed()) {
+=======
+                        && bombX <= (playerX + 7)
+                        && bombY >= (playerY)
+                        && bombY <= (playerY + 7) && !b.isDestroyed()) {
+
+>>>>>>> 20b0ba4b43520ee70af18405d71db818965e09ec
                             b.setDestroyed(true);
                             if (b.isDestroyed()) {
                                 player.decreasePlayerLive();
@@ -524,15 +547,7 @@ public class Game extends JPanel implements Runnable, Commons {
                         }
 
                     }*/
-                    if (!b.isDestroyed()) {
-
-                        b.setY(b.getY() + 5);
-
-                        if (b.getY() >= getHeight() - 45) {
-                            b.setY(b.getY() - 50);
-                            b.setDestroyed(true);
-                        }
-                    }
+                    
                 }
                 if (alienSize <= 0) {
                     setGoodGame(true);
