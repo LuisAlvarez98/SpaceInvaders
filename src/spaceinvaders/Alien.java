@@ -158,6 +158,10 @@ public class Alien extends Item {
         return new Rectangle(getX(), getY(), getWidth(), getHeight() - 50);
     }
 
+    public Rectangle setPerimetro() {
+        return new Rectangle(0, 0, 0, 0);
+    }
+
     public Bomb getbomb() {
         return bomb;
     }
