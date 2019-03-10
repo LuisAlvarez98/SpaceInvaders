@@ -476,7 +476,7 @@ public class Game extends JPanel implements Runnable, Commons {
 
                         b.setY(b.getY() + 1);
 
-                        if (b.getY() >= getHeight() - 60) {
+                        if (b.getY() >= getHeight() - 14) {
                             b.setDestroyed(true);
                         }
                     }
