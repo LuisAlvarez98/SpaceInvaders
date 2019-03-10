@@ -147,14 +147,6 @@ public class Player extends Item {
      *
      * @return
      */
-    public Rectangle getPerimetro() {
-        return new Rectangle(getX(), getY(), 50, 50);
-    }
-
-    public boolean intersects(Object obj) {
-        return obj instanceof Alien.Bomb && getPerimetro().intersects(((Alien.Bomb) obj).getPerimetro());
-    }
-
     /**
      * render method
      *
