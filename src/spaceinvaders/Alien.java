@@ -178,7 +178,7 @@ public class Alien extends Item {
 
         public Bomb(int x, int y) {
             int randNum = (int) (Math.random() * 100 + 1);
-            if (randNum % 6 == 0) {
+            if (randNum % 9 == 0) {
                 initBomb(x, y);
             }
         }
@@ -196,7 +196,12 @@ public class Alien extends Item {
         }
 
         public Rectangle getPerimetro() {
+<<<<<<< HEAD
             return new Rectangle(getX(), getY(), 10, 10);
+=======
+
+            return new Rectangle(getX(), getY(), 7, 7);
+>>>>>>> 0e13f8ca2a5976624c02783b1351e429eafac1e8
         }
 
         public boolean intersects(Player player) {
