@@ -31,7 +31,7 @@ public class Player extends Item {
      * @param game
      * @param bullet
      */
-    public Player(int x, int y, int width, int height, Game game,int lives) {
+    public Player(int x, int y, int width, int height, Game game, int lives) {
         super(x, y);
         this.width = width;
         this.height = height;
@@ -39,15 +39,18 @@ public class Player extends Item {
         this.lives = lives;
         this.visible = true;
     }
+
     /**
      * decreases the player lives by one
      */
     public void decreasePlayerLive() {
         this.lives--;
     }
+
     /**
      * setLives method
-     * @param lives 
+     *
+     * @param lives
      */
     public void setLives(int lives) {
         this.lives = lives;
@@ -61,7 +64,7 @@ public class Player extends Item {
     public int getLives() {
         return this.lives;
     }
-    
+
     /**
      * getDirection method
      *
@@ -129,22 +132,29 @@ public class Player extends Item {
         if (game.getKeyManager().right) {
             setX(getX() + 10);
         }
-       
+
         // reset x position and y position if colision
         if (getX() + 40 >= game.getWidth()) {
             setX(game.getWidth() - 40);
         } else if (getX() <= -10) {
             setX(-10);
         }
-        
+
     }
+
     /**
      * Creates rectangle for the player
-     * @return 
+     *
+     * @return
      */
-   public Rectangle getPerimetro() {
+    public Rectangle getPerimetro() {
         return new Rectangle(getX(), getY(), 20, 20);
     }
+
+    public boolean intersects(Object obj) {
+        return obj instanceof Alien.Bomb && getPerimetro().intersects(((Alien.Bomb) obj).getPerimetro());
+    }
+
     /**
      * render method
      *

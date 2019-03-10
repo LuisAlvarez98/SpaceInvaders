@@ -40,6 +40,7 @@ public class Alien extends Item {
         this.visible = true;
         bomb = new Bomb(x, y);
         this.visible = true;
+        this.dead = false;
     }
 
     public Bomb getBomb() {
@@ -195,6 +196,7 @@ public class Alien extends Item {
         }
 
         public Rectangle getPerimetro() {
+
             return new Rectangle(getX(), getY(), 7, 7);
         }
 
