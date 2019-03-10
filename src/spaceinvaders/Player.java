@@ -148,7 +148,7 @@ public class Player extends Item {
      * @return
      */
     public Rectangle getPerimetro() {
-        return new Rectangle(getX(), getY(), 50, 50);
+        return new Rectangle(getX(), getY(), 40, 40);
     }
 
     public boolean intersects(Object obj) {

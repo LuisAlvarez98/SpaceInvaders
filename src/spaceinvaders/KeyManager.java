@@ -95,8 +95,8 @@ public class KeyManager implements KeyListener {
         space = keys[KeyEvent.VK_SPACE];
         pause = keys[KeyEvent.VK_P];
         enter = keys[KeyEvent.VK_ENTER];
-        save = keys[KeyEvent.VK_S];
-        load = keys[KeyEvent.VK_L];
+        save = keys[KeyEvent.VK_G];
+        load = keys[KeyEvent.VK_C];
         restart = keys[KeyEvent.VK_R];
     }
 }
