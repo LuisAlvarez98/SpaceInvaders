@@ -480,9 +480,9 @@ public class Game extends JPanel implements Runnable, Commons {
                     if (player.isVisible() && !b.isDestroyed()) {
 
                         if (bombX >= (playerX)
-                                && bombX <= (playerX + PLAYER_WIDTH)
+                                && bombX <= (playerX + 50)
                                 && bombY >= (playerY)
-                                && bombY <= (playerY + PLAYER_HEIGHT)) {
+                                && bombY <= (playerY + 50)) {
                             b.setDestroyed(true);
                             player.setLives(player.getLives() - 1);
                         }
