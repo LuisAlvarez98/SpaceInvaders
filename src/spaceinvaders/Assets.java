@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public class Assets {
 
     public static BufferedImage player, alien, background, bullet, explosion, gameover, bomb, start, paused;
-    public static SoundClip main;
+    public static SoundClip main, bombExp;
 
     /**
      * loads the assets
@@ -27,6 +27,7 @@ public class Assets {
         paused = ImageLoader.loadImage("/images/paused.png");
 
         main = new SoundClip("/sounds/space.wav");
+        bombExp = new SoundClip("/sounds/explosion.wav");
     }
 
 }
