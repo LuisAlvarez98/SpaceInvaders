@@ -248,14 +248,20 @@ public class Game extends JPanel implements Runnable, Commons {
         bullet = new Bullet();
         display.getJframe().addKeyListener(keyManager);
     }
-
+    /**
+     * Draw shoot method
+     * @param g 
+     */
     public void drawShot(Graphics g) {
 
         if (bullet.isVisible()) {
             g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
         }
     }
-
+    /**
+     * Draw bombs method
+     * @param g 
+     */
     public void drawBombs(Graphics g) {
         for (Alien a : aliens) {
             Alien.Bomb b = a.getbomb();
@@ -396,12 +402,9 @@ public class Game extends JPanel implements Runnable, Commons {
                 }
             }
         }
-<<<<<<< HEAD
+        //if aint !gameover, gamestart and !isGoodGame
         if (!isGameOver() && isGameStart() && !isGoodGame()) {
-=======
-        
-        if (!isGameOver() && isGameStart()) {
->>>>>>> 20b0ba4b43520ee70af18405d71db818965e09ec
+            //Pause logic
             if (getKeyManager().pause) {
                 getKeyManager().setKeyDown();
                 paused = !paused;
@@ -460,7 +463,7 @@ public class Game extends JPanel implements Runnable, Commons {
                         bullet.setY(y);
                     }
                 }
-
+                   //checks alien position
                 for (int i = 0; i < aliens.size(); i++) {
 
                     int x = aliens.get(i).getX();
@@ -512,7 +515,7 @@ public class Game extends JPanel implements Runnable, Commons {
                     if (!b.isDestroyed()) {
 
                         b.setY(b.getY() + 5);
-
+                           //if bomb goes to ground
                         if (b.getY() >= GROUND - 35) {
                             //b.setY(b.getY() - 50);
                             b.setDestroyed(true);
@@ -521,16 +524,11 @@ public class Game extends JPanel implements Runnable, Commons {
                     if (player.isVisible() && !b.isDestroyed()) {
 
                         if (bombX >= (playerX)
-<<<<<<< HEAD
-                                && bombX <= (playerX + 4)
-                                && bombY >= (playerY)
-                                && bombY <= (playerY + 4) && !b.isDestroyed()) {
-=======
+
                         && bombX <= (playerX + 7)
                         && bombY >= (playerY)
                         && bombY <= (playerY + 7) && !b.isDestroyed()) {
 
->>>>>>> 20b0ba4b43520ee70af18405d71db818965e09ec
                             b.setDestroyed(true);
                             if (b.isDestroyed()) {
                                 player.decreasePlayerLive();
@@ -597,6 +595,7 @@ public class Game extends JPanel implements Runnable, Commons {
                     aliens.get(i).render(g);
                 }
             }
+            //Logic of game
             if (paused) {
                 g.drawImage(Assets.paused, 0, 0, width, height, null);
             }
@@ -642,7 +641,9 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
     }
-
+    /**
+     * Init the aliens on the game
+     */
     private void initAliens() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {

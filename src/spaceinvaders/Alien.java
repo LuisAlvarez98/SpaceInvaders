@@ -43,23 +43,38 @@ public class Alien extends Item {
         this.visible = true;
         this.dead = false;
     }
-
+    /**
+     * getBomb method
+     * @return bomb
+     */
     public Bomb getBomb() {
         return bomb;
     }
-
+    /**
+     * isVisible method
+     * @return 
+     */
     public boolean isVisible() {
         return visible;
     }
-
+    /**
+     * setVisible method
+     * @param visible 
+     */
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-
+    /**
+     * getDirection method
+     * @return direction
+     */
     public int getDirection() {
         return direction;
     }
-
+    /**
+     * setDirection method
+     * @param direction 
+     */
     public void setDirection(int direction) {
         this.direction = direction;
     }
@@ -158,11 +173,17 @@ public class Alien extends Item {
 
         return new Rectangle(getX(), getY(), getWidth(), getHeight() - 50);
     }
-
+    /**
+     * setPerimetro creates a new rectangle
+     * @return 
+     */
     public Rectangle setPerimetro() {
         return new Rectangle(0, 0, 0, 0);
     }
-
+    /**
+     * getBomb method
+     * @return bomb
+     */
     public Bomb getbomb() {
         return bomb;
     }
@@ -176,7 +197,9 @@ public class Alien extends Item {
     public void render(Graphics g) {
         g.drawImage(Assets.alien, getX(), getY(), getWidth(), getHeight(), null);
     }
-
+    /**
+     * Bomb clas
+     */
     public class Bomb extends Sprite {
 
         private boolean destroyed;
@@ -190,35 +213,57 @@ public class Alien extends Item {
                 initBomb(x, y);
             }
         }
-
+        /**
+         * getX
+         * @return x
+         */
         public int getX() {
             return x;
         }
-
+        /**
+         * getY
+         * @return y 
+         */
         public int getY() {
             return y;
         }
-
+        /**
+         * setX
+         * @param x 
+         */
         public void setX(int x) {
             this.x = x;
         }
-
+        /**
+         * setY 
+         * @param y 
+         */
         public void setY(int y) {
             this.y = y;
         }
-        
+           /**
+            * initBomb
+            * @param x
+            * @param y 
+            */
         private void initBomb(int x, int y) {
             setDestroyed(true);
             this.x = x;
             this.y = y;
             setImage(Assets.bomb);
         }
-
+        /**
+         * setDestroyed method
+         * @param destroyed 
+         */
         public void setDestroyed(boolean destroyed) {
 
             this.destroyed = destroyed;
         }
-
+        /**
+         * isDestroyed method
+         * @return destroyed
+         */
         public boolean isDestroyed() {
 
             return destroyed;
