@@ -60,7 +60,7 @@ public class Game extends JPanel implements Runnable, Commons {
     private final int ALIEN_INIT_Y = 15;
     private ArrayList<Alien> aliens;
     private LinkedList<Heart> hearts;
-
+    private boolean gameover, goodgame;
     private int direction = -1;
 
     private int alienSize;
@@ -188,6 +188,24 @@ public class Game extends JPanel implements Runnable, Commons {
      *
      * @return score
      */
+    public boolean isGoodGame() {
+        return goodgame;
+    }
+
+    /**
+     * setScore method
+     *
+     * @param score
+     */
+    public void setGoodGame(boolean goodgame) {
+        this.goodgame = goodgame;
+    }
+
+    /**
+     * getScore method
+     *
+     * @return score
+     */
     public int getScore() {
         return score;
     }
@@ -230,14 +248,20 @@ public class Game extends JPanel implements Runnable, Commons {
         bullet = new Bullet();
         display.getJframe().addKeyListener(keyManager);
     }
-
+    /**
+     * Draw shoot method
+     * @param g 
+     */
     public void drawShot(Graphics g) {
 
         if (bullet.isVisible()) {
             g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
         }
     }
-
+    /**
+     * Draw bombs method
+     * @param g 
+     */
     public void drawBombs(Graphics g) {
         for (Alien a : aliens) {
             Alien.Bomb b = a.getbomb();
@@ -378,8 +402,9 @@ public class Game extends JPanel implements Runnable, Commons {
                 }
             }
         }
-        
-        if (!isGameOver() && isGameStart()) {
+        //if aint !gameover, gamestart and !isGoodGame
+        if (!isGameOver() && isGameStart() && !isGoodGame()) {
+            //Pause logic
             if (getKeyManager().pause) {
                 getKeyManager().setKeyDown();
                 paused = !paused;
@@ -425,9 +450,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                 
                                 bullet.die();
                                 aliens.get(i).setDead(true);
-                                setAlienSize(aliens.size());
-                                System.out.println(getAlienSize());
-
+                                setAlienSize(getAlienSize() - 1);
                             }
                         }
                     }
@@ -441,7 +464,7 @@ public class Game extends JPanel implements Runnable, Commons {
                         bullet.setY(y);
                     }
                 }
-
+                   //checks alien position
                 for (int i = 0; i < aliens.size(); i++) {
 
                     int x = aliens.get(i).getX();
@@ -495,20 +518,19 @@ public class Game extends JPanel implements Runnable, Commons {
                         b.setY(b.getY() + 5);
 
                         if (b.getY() >= GROUND - 35) {
-                            b.setY(b.getY() + 50);
+                            //b.setY(b.getY() - 50);
                             b.setDestroyed(true);
                         }
                     }
                     if (player.isVisible() && !b.isDestroyed()) {
 
                         if (bombX >= (playerX)
-                        && bombX <= (playerX + 6)
+                        && bombX <= (playerX + 7)
                         && bombY >= (playerY)
-                        && bombY <= (playerY + 6) && !b.isDestroyed()) {
-
+                        && bombY <= (playerY + 7) && !b.isDestroyed()) {
                             b.setDestroyed(true);
                             if(b.isDestroyed()) {
-                               player.decreasePlayerLive();
+                               player.setLives(player.getLives() - 1); 
                             }
                             Assets.bombExp.play();
                         }
@@ -533,6 +555,7 @@ public class Game extends JPanel implements Runnable, Commons {
         } else if (getKeyManager().enter) {
             //init everything
             setGameOver(false);
+            setGoodGame(false);
 
             //Resets lives and score
             player.setLives(3);
@@ -569,6 +592,7 @@ public class Game extends JPanel implements Runnable, Commons {
                     aliens.get(i).render(g);
                 }
             }
+            //Logic of game
             if (paused) {
                 g.drawImage(Assets.paused, 0, 0, width, height, null);
             }
@@ -578,6 +602,9 @@ public class Game extends JPanel implements Runnable, Commons {
             if (isGameOver()) {
                 g.drawImage(Assets.gameover, 0, 0, width, height, null);
                 aliens.remove(g);
+            }
+            if (isGoodGame()) {
+                g.drawImage(Assets.gg, 0, 0, width, height, null);
             }
             g.setColor(Color.WHITE);
             g.drawString("Score: " + getScore(), 5, getHeight() - 475);
@@ -611,7 +638,9 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
     }
-
+    /**
+     * Init the aliens on the game
+     */
     private void initAliens() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
