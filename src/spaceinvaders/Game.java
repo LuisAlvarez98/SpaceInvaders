@@ -464,10 +464,9 @@ public class Game extends JPanel implements Runnable, Commons {
 
                 for (Alien alien : aliens) {
 
-
                     int shot = generator.nextInt(15);
                     Alien.Bomb b = alien.getbomb();
-                    if (shot == 5 && alien.isVisible() && b.isDestroyed()) {
+                    if (shot == CHANCE && alien.isVisible() && b.isDestroyed()) {
                         b.setDestroyed(false);
                         b.setX(alien.getX());
                         b.setY(alien.getY());
@@ -478,8 +477,17 @@ public class Game extends JPanel implements Runnable, Commons {
                     int bombY = b.getY();
                     int playerX = player.getX();
                     int playerY = player.getY();
+                    if (player.isVisible() && !b.isDestroyed()) {
 
-                    if (player.intersects(b)) {
+                        if (bombX >= (playerX)
+                                && bombX <= (playerX + PLAYER_WIDTH)
+                                && bombY >= (playerY)
+                                && bombY <= (playerY + PLAYER_HEIGHT)) {
+                            b.setDestroyed(true);
+                            player.setLives(player.getLives() - 1);
+                        }
+                    }
+                    /*if (player.intersects(b)) {
                         int counter = 0;
                         if (counter == 0) {
                             player.setLives(player.getLives() - 1);
@@ -487,12 +495,12 @@ public class Game extends JPanel implements Runnable, Commons {
                             counter++;
                         }
 
-                    }
+                    }*/
                     if (!b.isDestroyed()) {
 
                         b.setY(b.getY() + 1);
 
-                        if (b.getY() >= getHeight() - 30) {
+                        if (b.getY() >= getHeight()) {
                             b.setDestroyed(true);
                         }
                     }
