@@ -175,6 +175,7 @@ public class Alien extends Item {
     @Override
     public void render(Graphics g) {
         g.drawImage(Assets.alien, getX(), getY(), getWidth(), getHeight(), null);
+        
     }
 
     public class Bomb extends Sprite {

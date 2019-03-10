@@ -400,7 +400,7 @@ public class Game extends JPanel implements Runnable, Commons {
                     //RESETS PLAYER, BULLET AND ALIENS
                     aliens = new ArrayList<Alien>();
                     initAliens();
-                    player = new Player(getWidth() / 2 - 35, getHeight() - 50, 50, 50, this, 3);
+                    player = new Player(getWidth() / 2 - 35, getHeight() - 60, 50, 50, this, 3);
                     bullet = new Bullet();
                 }
                 if (bullet.isVisible()) {
@@ -422,6 +422,7 @@ public class Game extends JPanel implements Runnable, Commons {
                                         = new ImageIcon(Assets.explosion);
                                 increaseScore();
                                 Assets.bombExp.play();
+                                
                                 bullet.die();
                                 aliens.get(i).setDead(true);
                                 setAlienSize(aliens.size());
@@ -494,16 +495,16 @@ public class Game extends JPanel implements Runnable, Commons {
                         b.setY(b.getY() + 5);
 
                         if (b.getY() >= GROUND - 35) {
-                            //b.setY(b.getY() - 50);
+                            b.setY(b.getY() + 50);
                             b.setDestroyed(true);
                         }
                     }
                     if (player.isVisible() && !b.isDestroyed()) {
 
                         if (bombX >= (playerX)
-                        && bombX <= (playerX + 7)
+                        && bombX <= (playerX + 6)
                         && bombY >= (playerY)
-                        && bombY <= (playerY + 7) && !b.isDestroyed()) {
+                        && bombY <= (playerY + 6) && !b.isDestroyed()) {
 
                             b.setDestroyed(true);
                             if(b.isDestroyed()) {
