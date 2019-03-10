@@ -180,14 +180,33 @@ public class Alien extends Item {
     public class Bomb extends Sprite {
 
         private boolean destroyed;
-
+        private int x;
+        private int y;
         public Bomb(int x, int y) {
             int randNum = (int) (Math.random() * 100 + 1);
+            this.x = x;
+            this.y = y;
             if (randNum % 9 == 0) {
                 initBomb(x, y);
             }
         }
 
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+        
         private void initBomb(int x, int y) {
             setDestroyed(true);
             this.x = x;
@@ -198,15 +217,6 @@ public class Alien extends Item {
         public void setDestroyed(boolean destroyed) {
 
             this.destroyed = destroyed;
-        }
-
-       public Rectangle getPerimetro() {
-            return new Rectangle(getX(), getY(), 8, 8);
-
-        }
-
-        public boolean intersects(Player player) {
-            return player instanceof Player && getPerimetro().intersects(((Player) player).getPerimetro());
         }
 
         public boolean isDestroyed() {

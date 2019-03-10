@@ -368,6 +368,7 @@ public class Game extends JPanel implements Runnable, Commons {
                         int dead = (alien.isDead() ? 1 : 0);
                         bufferedWriter.write(Integer.toString(dead) + '\n');
                     }
+
                     // Always close files.
                     bufferedWriter.close();
                 } catch (IOException ex) {
@@ -412,7 +413,7 @@ public class Game extends JPanel implements Runnable, Commons {
                         int alienX = aliens.get(i).getX();
                         int alienY = aliens.get(i).getY();
 
-                        if (bullet.isVisible()) {
+                        if (bullet.isVisible() && !aliens.get(i).isDead()) {
                             if (bulletX >= (alienX)
                                     && bulletX <= (alienX + aliens.get(i).getWidth())
                                     && bulletY >= (alienY)
@@ -503,9 +504,10 @@ public class Game extends JPanel implements Runnable, Commons {
                         && bombX <= (playerX + 7)
                         && bombY >= (playerY)
                         && bombY <= (playerY + 7) && !b.isDestroyed()) {
+
                             b.setDestroyed(true);
                             if(b.isDestroyed()) {
-                               player.setLives(player.getLives() - 1); 
+                               player.decreasePlayerLive();
                             }
                             Assets.bombExp.play();
                         }
