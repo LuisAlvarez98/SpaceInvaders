@@ -3,6 +3,8 @@ package spaceinvaders;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
+import static spaceinvaders.Commons.ALIEN_HEIGHT;
+import static spaceinvaders.Commons.ALIEN_WIDTH;
 
 /**
  * Player class
@@ -33,7 +35,6 @@ public class Alien extends Item {
         super(x, y);
         this.width = width;
         this.height = height;
-        health = 3;
         this.game = game;
         this.dead = false;
         this.direction = 1;
@@ -195,9 +196,9 @@ public class Alien extends Item {
             this.destroyed = destroyed;
         }
 
-        public Rectangle getPerimetro() {
+       public Rectangle getPerimetro() {
+            return new Rectangle(getX(), getY(), 8, 8);
 
-            return new Rectangle(getX(), getY(), 7, 7);
         }
 
         public boolean intersects(Player player) {

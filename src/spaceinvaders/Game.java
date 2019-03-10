@@ -377,12 +377,10 @@ public class Game extends JPanel implements Runnable, Commons {
             }
         }
         if (!isGameOver() && isGameStart()) {
-            if (!paused && getKeyManager().pause) {
-                paused = true;
-                getKeyManager().keyCheck(KeyEvent.VK_P, true);
-            } else if (getKeyManager().pause && paused) {
-                paused = false;
-                //getKeyManager().keyCheck(KeyEvent.VK_P, false);
+            if(getKeyManager().pause){
+                getKeyManager().setKeyDown();
+                paused = !paused;
+                
             }
             if (!paused) {
                 player.tick();
@@ -451,7 +449,7 @@ public class Game extends JPanel implements Runnable, Commons {
 
                         int y = aliens.get(i).getY();
                         //System.out.println(y);
-                        if (y > GROUND - ALIEN_HEIGHT - 45) {
+                        if (y > GROUND - ALIEN_HEIGHT - 20) {
                             System.out.println("end");
                             setGameOver(true);
 
@@ -477,14 +475,15 @@ public class Game extends JPanel implements Runnable, Commons {
                     int bombY = b.getY();
                     int playerX = player.getX();
                     int playerY = player.getY();
-                    if (player.isVisible() && !b.isDestroyed()) {
+                    if (player.isVisible()) {
 
                         if (bombX >= (playerX)
-                                && bombX <= (playerX + 50)
-                                && bombY >= (playerY)
-                                && bombY <= (playerY + 50)) {
+                        && bombX <= (playerX + 5)
+                        && bombY >= (playerY)
+                        && bombY <= (playerY + 5) && !b.isDestroyed()) {
                             b.setDestroyed(true);
                             player.setLives(player.getLives() - 1);
+                            Assets.bombExp.play();
                         }
                     }
                     /*if (player.intersects(b)) {
@@ -498,9 +497,10 @@ public class Game extends JPanel implements Runnable, Commons {
                     }*/
                     if (!b.isDestroyed()) {
 
-                        b.setY(b.getY() + 1);
+                        b.setY(b.getY() + 5);
 
-                        if (b.getY() >= getHeight()) {
+                        if (b.getY() >= getHeight() - 45) {
+                            b.setY(b.getY() + 50);
                             b.setDestroyed(true);
                         }
                     }
